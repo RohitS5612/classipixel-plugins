@@ -11,7 +11,7 @@ This plugin adds paintball map management functionality to MCGalaxy servers.
 
 ## Installation
 
-1. Copy `PaintballPlugin.cs` and `CmdPaintball.cs` to your MCGalaxy `plugins` folder
+1. Copy `PaintballPlugin.cs` to your MCGalaxy `plugins` folder
 2. Restart your MCGalaxy server or use `/pcompile Paintball` followed by `/pload Paintball`
 
 ## Usage
