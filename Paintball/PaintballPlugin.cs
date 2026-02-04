@@ -396,6 +396,7 @@ namespace Paintball
 
         public override void Help(Player p)
         {
+            p.Message("&HYou can use either /pb or /paintball for all commands.");
             p.Message("&T/pb &H- Teleports you to the active Paintball map");
             p.Message("&T/pb add <map> &H- Adds a map to the Paintball maps list (Admin only)");
             p.Message("&T/pb remove/rem/delete/del <map> &H- Removes a map from the list (Admin only)");

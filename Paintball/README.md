@@ -22,8 +22,9 @@ This plugin adds paintball map management functionality to MCGalaxy servers.
 ### Teleport to Paintball map:
 ```
 /pb
+/paintball
 ```
-Simply typing `/pb` will teleport you to the currently active Paintball map. If no active map is set, a random map from the list will be selected.
+Simply typing `/pb` or `/paintball` will teleport you to the currently active Paintball map. If no active map is set, a random map from the list will be selected.
 
 ### Add a map to Paintball maps:
 ```
@@ -56,7 +57,9 @@ Sets which map players will be teleported to when using `/pb`. The map must alre
 
 ## Commands
 
-- `/pb` - Teleports you to the active Paintball map (Everyone)
+**Note:** You can use either `/pb` or `/paintball` for all commands below.
+
+- `/pb` or `/paintball` - Teleports you to the active Paintball map (Everyone)
 - `/pb add <map>` - Adds a map to the Paintball maps list (Admin only)
 - `/pb remove <map>` - Removes a map from the list (Admin only)
 - `/pb rem <map>` - Alias for remove (Admin only)
