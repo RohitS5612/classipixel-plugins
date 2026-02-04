@@ -82,7 +82,7 @@ namespace Paintball
         public override string name { get { return "Paintball"; } }
         public override string shortcut { get { return "pb"; } }
         public override string type { get { return CommandTypes.Games; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message, CommandData data)
         {
@@ -97,6 +97,16 @@ namespace Paintball
 
             string action = args[0].ToLower();
             string mapName = args[1];
+
+            // Check if action requires admin permission
+            if (action == "add" || action == "remove" || action == "rem" || action == "delete" || action == "del")
+            {
+                if (p.Rank < LevelPermission.Admin)
+                {
+                    p.Message("&cOnly admins can add or remove Paintball maps.");
+                    return;
+                }
+            }
 
             // Check if map exists
             if (!LevelInfo.MapExists(mapName))

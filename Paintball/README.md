@@ -41,7 +41,10 @@ All remove variations (`remove`, `rem`, `delete`, `del`) perform the same action
 
 ## Permissions
 
-Default permission level: **Admin**
+- Command access: **Guest** (anyone can use the command)
+- Add/Remove maps: **Admin** (only admins can modify the map list)
+
+Future commands will be available to all players, but map management requires admin privileges.
 
 ## Storage
 
