@@ -20,7 +20,8 @@ namespace Paintball
             
             if (args.Length < 2)
             {
-                p.Message("Usage: /pb <add|remove|rem|delete|del> <map>");
+                p.Message("Usage: /pb <add|remove> <map>");
+                p.Message("Use /help pb for more information");
                 return;
             }
 
