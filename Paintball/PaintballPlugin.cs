@@ -16,7 +16,7 @@ namespace Paintball
         public override string creator { get { return "Classipixel"; } }
 
         public static List<string> PaintballMaps = new List<string>();
-        private const string PAINTBALL_MAPS_FILE = "text/paintballmaps.txt";
+        private const string PAINTBALL_MAPS_FILE = "plugins/Paintball/maps.conf";
 
         public override void Load(bool startup)
         {
@@ -47,7 +47,7 @@ namespace Paintball
 
         public static void SavePaintballMaps()
         {
-            Directory.CreateDirectory("text");
+            Directory.CreateDirectory("plugins/Paintball");
             File.WriteAllLines(PAINTBALL_MAPS_FILE, PaintballMaps.ToArray());
         }
 
@@ -75,6 +75,12 @@ namespace Paintball
             }
             return false;
         }
+
+        public static void ClearPaintballMaps()
+        {
+            PaintballMaps.Clear();
+            SavePaintballMaps();
+        }
     }
 
     public sealed class CmdPaintball : Command2
@@ -87,37 +93,62 @@ namespace Paintball
         // Actions that require admin permission
         private static readonly HashSet<string> adminActions = new HashSet<string> 
         {
-            "add", "remove", "rem", "delete", "del"
+            "add", "remove", "rem", "delete", "del", "clear"
         };
 
         public override void Use(Player p, string message, CommandData data)
         {
             string[] args = message.SplitSpaces();
             
-            if (args.Length < 2)
+            if (args.Length < 1)
             {
-                p.Message("Usage: /pb <add|remove> <map>");
-                p.Message("Use /help pb for more information");
+                p.Message("&cUsage: /pb <add|remove|clear> <map|--confirm>");
+                p.Message("&cUse /help pb for more information");
                 return;
             }
 
             string action = args[0].ToLower();
-            string mapName = args[1];
 
             // Check if action requires admin permission
             if (adminActions.Contains(action))
             {
                 if (p.Rank < LevelPermission.Admin)
                 {
-                    p.Message("&cOnly admins can add or remove Paintball maps.");
+                    p.Message("&cYou must be an Admin to manage Paintball maps.");
                     return;
                 }
             }
 
+            // Handle clear action
+            if (action == "clear")
+            {
+                if (args.Length < 2 || args[1] != "--confirm")
+                {
+                    p.Message("&cAre you sure you want to clear all Paintball maps?");
+                    p.Message("&cUse: &f/pb clear --confirm &cto proceed.");
+                    return;
+                }
+
+                int count = PaintballPlugin.PaintballMaps.Count;
+                PaintballPlugin.ClearPaintballMaps();
+                p.Message("&aCleared all {0} Paintball map(s) from the list.", count);
+                return;
+            }
+
+            // For add/remove actions, we need a map name
+            if (args.Length < 2)
+            {
+                p.Message("&cUsage: /pb <add|remove> <map>");
+                p.Message("&cUse /help pb for more information");
+                return;
+            }
+
+            string mapName = args[1];
+
             // Check if map exists
             if (!LevelInfo.MapExists(mapName))
             {
-                p.Message("&cMap '{0}' does not exist.", mapName);
+                p.Message("&cThe map '{0}' does not exist on this server.", mapName);
                 return;
             }
 
@@ -126,11 +157,11 @@ namespace Paintball
             {
                 if (PaintballPlugin.AddPaintballMap(mapName))
                 {
-                    p.Message("&aMap '{0}' has been marked as a Paintball map.", mapName);
+                    p.Message("&aSuccessfully added '{0}' to the Paintball maps list.", mapName);
                 }
                 else
                 {
-                    p.Message("&cMap '{0}' is already a Paintball map.", mapName);
+                    p.Message("&cThe map '{0}' is already in the Paintball maps list.", mapName);
                 }
             }
             // Handle remove actions
@@ -138,23 +169,25 @@ namespace Paintball
             {
                 if (PaintballPlugin.RemovePaintballMap(mapName))
                 {
-                    p.Message("&aMap '{0}' has been removed from Paintball maps.", mapName);
+                    p.Message("&aSuccessfully removed '{0}' from the Paintball maps list.", mapName);
                 }
                 else
                 {
-                    p.Message("&cMap '{0}' is not a Paintball map.", mapName);
+                    p.Message("&cThe map '{0}' is not in the Paintball maps list.", mapName);
                 }
             }
             else
             {
-                p.Message("&cInvalid action. Use: add, remove, rem, delete, or del");
+                p.Message("&cInvalid action. Use: add, remove, rem, delete, del, or clear");
+                p.Message("&cUse /help pb for more information");
             }
         }
 
         public override void Help(Player p)
         {
-            p.Message("&T/pb add <map> &H- Marks a map as a Paintball map");
-            p.Message("&T/pb remove/rem/delete/del <map> &H- Removes a map from Paintball maps");
+            p.Message("&T/pb add <map> &H- Adds a map to the Paintball maps list (Admin only)");
+            p.Message("&T/pb remove/rem/delete/del <map> &H- Removes a map from the list (Admin only)");
+            p.Message("&T/pb clear --confirm &H- Clears all maps from the list (Admin only)");
         }
     }
 }

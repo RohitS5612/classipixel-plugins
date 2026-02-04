@@ -4,10 +4,11 @@ This plugin adds paintball map management functionality to MCGalaxy servers.
 
 ## Features
 
-- Mark maps as Paintball maps
-- Remove maps from the Paintball map list
+- Add maps to the Paintball maps list
+- Remove maps from the Paintball maps list
+- Clear all maps from the list with confirmation
 - Automatic map existence validation
-- Persistent storage of Paintball map list
+- Persistent storage in `plugins/Paintball/maps.conf`
 
 ## Installation
 
@@ -31,24 +32,32 @@ This plugin adds paintball map management functionality to MCGalaxy servers.
 
 All remove variations (`remove`, `rem`, `delete`, `del`) perform the same action.
 
+### Clear all Paintball maps:
+```
+/pb clear --confirm
+```
+
+**Note:** Running `/pb clear` without `--confirm` will show a confirmation prompt to prevent accidental deletion.
+
 ## Commands
 
-- `/pb add <map>` - Marks a map as a Paintball map
-- `/pb remove <map>` - Removes a map from Paintball maps
-- `/pb rem <map>` - Alias for remove
-- `/pb delete <map>` - Alias for remove
-- `/pb del <map>` - Alias for remove
+- `/pb add <map>` - Adds a map to the Paintball maps list (Admin only)
+- `/pb remove <map>` - Removes a map from the list (Admin only)
+- `/pb rem <map>` - Alias for remove (Admin only)
+- `/pb delete <map>` - Alias for remove (Admin only)
+- `/pb del <map>` - Alias for remove (Admin only)
+- `/pb clear --confirm` - Clears all maps from the list (Admin only)
 
 ## Permissions
 
 - Command access: **Guest** (anyone can use the command)
-- Add/Remove maps: **Admin** (only admins can modify the map list)
+- Add/Remove/Clear maps: **Admin** (only admins can modify the map list)
 
 Future commands will be available to all players, but map management requires admin privileges.
 
 ## Storage
 
-Paintball maps are stored in `text/paintballmaps.txt` in your MCGalaxy directory.
+Paintball maps are stored in `plugins/Paintball/maps.conf` in your MCGalaxy directory.
 
 ## Requirements
 
@@ -60,3 +69,4 @@ Paintball maps are stored in `text/paintballmaps.txt` in your MCGalaxy directory
 - The plugin automatically checks if the specified map exists before adding or removing it
 - Map names are case-insensitive (matching MCGalaxy's standard map handling)
 - The list of Paintball maps persists across server restarts
+- The `clear` command requires confirmation to prevent accidental data loss
