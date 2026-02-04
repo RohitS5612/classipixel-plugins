@@ -17,6 +17,7 @@ namespace Paintball
 
         public static List<string> PaintballMaps = new List<string>();
         public static Dictionary<string, string> Settings = new Dictionary<string, string>();
+        private static Random random = new Random();
         private const string PAINTBALL_MAPS_FILE = "plugins/Paintball/maps.conf";
         private const string PAINTBALL_CONFIG_FILE = "plugins/Paintball/paintball.conf";
 
@@ -24,6 +25,12 @@ namespace Paintball
         {
             get { return Settings.ContainsKey("activemap") ? Settings["activemap"] : ""; }
             set { Settings["activemap"] = value; }
+        }
+
+        public static bool IsEnabled
+        {
+            get { return GetSetting("enabled", "true").CaselessEq("true"); }
+            set { Settings["enabled"] = value ? "true" : "false"; }
         }
 
         public override void Load(bool startup)
@@ -90,9 +97,13 @@ namespace Paintball
             lines.Add("# Format: key=value");
             lines.Add("");
             
-            foreach (var kvp in Settings)
+            // Sort keys for consistent output
+            List<string> sortedKeys = new List<string>(Settings.Keys);
+            sortedKeys.Sort();
+            
+            foreach (string key in sortedKeys)
             {
-                lines.Add(string.Format("{0}={1}", kvp.Key, kvp.Value));
+                lines.Add(string.Format("{0}={1}", key, Settings[key]));
             }
             
             File.WriteAllLines(PAINTBALL_CONFIG_FILE, lines.ToArray());
@@ -154,8 +165,7 @@ namespace Paintball
         public static string GetRandomMap()
         {
             if (PaintballMaps.Count == 0) return null;
-            Random rand = new Random();
-            int index = rand.Next(PaintballMaps.Count);
+            int index = random.Next(PaintballMaps.Count);
             return PaintballMaps[index];
         }
 
@@ -189,7 +199,7 @@ namespace Paintball
         // Actions that require admin permission
         private static readonly HashSet<string> adminActions = new HashSet<string> 
         {
-            "add", "remove", "rem", "delete", "del", "clear", "set"
+            "add", "remove", "rem", "delete", "del", "clear", "set", "enable", "disable"
         };
 
         public override void Use(Player p, string message, CommandData data)
@@ -210,9 +220,27 @@ namespace Paintball
             {
                 if (p.Rank < LevelPermission.Admin)
                 {
-                    p.Message("&cYou must be an Admin to manage Paintball maps.");
+                    p.Message("&cYou must be an Admin to manage Paintball.");
                     return;
                 }
+            }
+
+            // Handle enable action
+            if (action == "enable")
+            {
+                PaintballPlugin.IsEnabled = true;
+                PaintballPlugin.SaveSettings();
+                p.Message("&aPaintball has been enabled.");
+                return;
+            }
+
+            // Handle disable action
+            if (action == "disable")
+            {
+                PaintballPlugin.IsEnabled = false;
+                PaintballPlugin.SaveSettings();
+                p.Message("&cPaintball has been disabled.");
+                return;
             }
 
             // Handle set action
@@ -313,6 +341,14 @@ namespace Paintball
 
         private void TeleportToActivePaintball(Player p)
         {
+            // Check if Paintball is enabled
+            if (!PaintballPlugin.IsEnabled)
+            {
+                p.Message("&cPaintball is currently disabled.");
+                p.Message("&cAn admin can enable it with /pb enable");
+                return;
+            }
+
             // Check if there are any paintball maps
             if (PaintballPlugin.PaintballMaps.Count == 0)
             {
@@ -354,6 +390,8 @@ namespace Paintball
             p.Message("&c  /pb remove <map> &f- Remove a map from the list (Admin)");
             p.Message("&c  /pb set <map> &f- Set the active Paintball map (Admin)");
             p.Message("&c  /pb clear --confirm &f- Clear all maps (Admin)");
+            p.Message("&c  /pb enable &f- Enable Paintball (Admin)");
+            p.Message("&c  /pb disable &f- Disable Paintball (Admin)");
             p.Message("&cUse /help pb for more information");
         }
 
@@ -364,6 +402,8 @@ namespace Paintball
             p.Message("&T/pb remove/rem/delete/del <map> &H- Removes a map from the list (Admin only)");
             p.Message("&T/pb set <map> &H- Sets the active Paintball map (Admin only)");
             p.Message("&T/pb clear --confirm &H- Clears all maps from the list (Admin only)");
+            p.Message("&T/pb enable &H- Enables Paintball (Admin only)");
+            p.Message("&T/pb disable &H- Disables Paintball (Admin only)");
         }
     }
 }
