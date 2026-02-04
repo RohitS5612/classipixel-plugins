@@ -84,6 +84,12 @@ namespace Paintball
         public override string type { get { return CommandTypes.Games; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
+        // Actions that require admin permission
+        private static readonly HashSet<string> adminActions = new HashSet<string> 
+        {
+            "add", "remove", "rem", "delete", "del"
+        };
+
         public override void Use(Player p, string message, CommandData data)
         {
             string[] args = message.SplitSpaces();
@@ -99,7 +105,7 @@ namespace Paintball
             string mapName = args[1];
 
             // Check if action requires admin permission
-            if (action == "add" || action == "remove" || action == "rem" || action == "delete" || action == "del")
+            if (adminActions.Contains(action))
             {
                 if (p.Rank < LevelPermission.Admin)
                 {
