@@ -230,7 +230,8 @@ namespace Paintball
             {
                 PaintballPlugin.IsEnabled = true;
                 PaintballPlugin.SaveSettings();
-                p.Message("&aPaintball has been enabled.");
+                p.Message("&aPaintball teleportation has been enabled.");
+                p.Message("&aPlayers can now use /pb to join Paintball maps.");
                 return;
             }
 
@@ -239,7 +240,9 @@ namespace Paintball
             {
                 PaintballPlugin.IsEnabled = false;
                 PaintballPlugin.SaveSettings();
-                p.Message("&cPaintball has been disabled.");
+                p.Message("&cPaintball teleportation has been disabled.");
+                p.Message("&cPlayers cannot use /pb to join Paintball maps.");
+                p.Message("&7(Admins can still manage maps)");
                 return;
             }
 
@@ -344,8 +347,7 @@ namespace Paintball
             // Check if Paintball is enabled
             if (!PaintballPlugin.IsEnabled)
             {
-                p.Message("&cPaintball is currently disabled.");
-                p.Message("&cAn admin can enable it with /pb enable");
+                p.Message("&cPaintball teleportation is currently disabled.");
                 return;
             }
 
@@ -402,8 +404,8 @@ namespace Paintball
             p.Message("&T/pb remove/rem/delete/del <map> &H- Removes a map from the list (Admin only)");
             p.Message("&T/pb set <map> &H- Sets the active Paintball map (Admin only)");
             p.Message("&T/pb clear --confirm &H- Clears all maps from the list (Admin only)");
-            p.Message("&T/pb enable &H- Enables Paintball (Admin only)");
-            p.Message("&T/pb disable &H- Disables Paintball (Admin only)");
+            p.Message("&T/pb enable &H- Enables player teleportation to Paintball (Admin only)");
+            p.Message("&T/pb disable &H- Disables player teleportation to Paintball (Admin only)");
         }
     }
 }

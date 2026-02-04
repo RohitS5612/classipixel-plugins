@@ -67,6 +67,8 @@ Sets which map players will be teleported to when using `/pb`. The map must alre
 - `/pb enable` - Enables the Paintball plugin (Admin only)
 - `/pb disable` - Disables the Paintball plugin (Admin only)
 
+**Note:** Enable/disable only affects player teleportation with `/pb`. Admins can still manage maps when disabled. Gamemode functionality will be added in future updates.
+
 ## Permissions
 
 - Teleport (`/pb`): **Guest** (everyone can teleport to Paintball when enabled)
@@ -92,7 +94,9 @@ The `paintball.conf` file uses a simple `key=value` format and can be edited dir
 - Map names are case-insensitive (matching MCGalaxy's standard map handling)
 - The list of Paintball maps persists across server restarts
 - The active map persists across server restarts
-- The enabled/disabled state persists across server restarts
+- The enabled/disabled state only affects player teleportation to Paintball maps
+- When disabled, admins can still manage maps, but players cannot use `/pb` to teleport
+- Gamemode functionality (start/stop game on maps) will be added in future updates
 - The `clear` command requires confirmation to prevent accidental data loss
 - When the first map is added, it automatically becomes the active map
 - If the active map is removed, it will be cleared and a new one selected on next `/pb` use
