@@ -82,7 +82,7 @@ namespace Paintball
         public override string name { get { return "Paintball"; } }
         public override string shortcut { get { return "pb"; } }
         public override string type { get { return CommandTypes.Games; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
         public override void Use(Player p, string message, CommandData data)
         {

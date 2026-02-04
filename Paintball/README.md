@@ -41,7 +41,7 @@ All remove variations (`remove`, `rem`, `delete`, `del`) perform the same action
 
 ## Permissions
 
-Default permission level: **Operator**
+Default permission level: **Admin**
 
 ## Storage
 
