@@ -230,8 +230,7 @@ namespace Paintball
             {
                 PaintballPlugin.IsEnabled = true;
                 PaintballPlugin.SaveSettings();
-                p.Message("&aPaintball teleportation has been enabled.");
-                p.Message("&aPlayers can now use /pb to join Paintball maps.");
+                p.Message("&aPaintball teleportation enabled - players can now use /pb to join Paintball maps.");
                 return;
             }
 
@@ -240,9 +239,7 @@ namespace Paintball
             {
                 PaintballPlugin.IsEnabled = false;
                 PaintballPlugin.SaveSettings();
-                p.Message("&cPaintball teleportation has been disabled.");
-                p.Message("&cPlayers cannot use /pb to join Paintball maps.");
-                p.Message("&7(Admins can still manage maps)");
+                p.Message("&cPaintball teleportation disabled - players cannot use /pb (admins can still manage maps).");
                 return;
             }
 
