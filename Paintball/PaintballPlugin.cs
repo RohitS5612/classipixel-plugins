@@ -102,8 +102,7 @@ namespace Paintball
             
             if (args.Length < 1)
             {
-                p.Message("&cUsage: /pb <add|remove|clear> <map|--confirm>");
-                p.Message("&cUse /help pb for more information");
+                ShowUsage(p);
                 return;
             }
 
@@ -138,8 +137,7 @@ namespace Paintball
             // For add/remove actions, we need a map name
             if (args.Length < 2)
             {
-                p.Message("&cUsage: /pb <add|remove> <map>");
-                p.Message("&cUse /help pb for more information");
+                ShowUsage(p);
                 return;
             }
 
@@ -178,9 +176,18 @@ namespace Paintball
             }
             else
             {
-                p.Message("&cInvalid action. Use: add, remove, rem, delete, del, or clear");
-                p.Message("&cUse /help pb for more information");
+                p.Message("&cInvalid action: '{0}'", action);
+                ShowUsage(p);
             }
+        }
+
+        private void ShowUsage(Player p)
+        {
+            p.Message("&cUsage:");
+            p.Message("&c  /pb add <map> &f- Add a map to the list");
+            p.Message("&c  /pb remove <map> &f- Remove a map from the list");
+            p.Message("&c  /pb clear --confirm &f- Clear all maps");
+            p.Message("&cUse /help pb for more information");
         }
 
         public override void Help(Player p)
