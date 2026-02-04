@@ -123,6 +123,9 @@ namespace Paintball
 
         public static bool RemovePaintballMap(string mapName)
         {
+            // NOTE: This only removes the map from the Paintball list
+            // The actual map/level file is NOT deleted from the server
+            
             // Use case-insensitive comparison to match MCGalaxy's map handling
             string existing = PaintballMaps.Find(m => m.CaselessEq(mapName));
             if (existing != null)
@@ -143,6 +146,8 @@ namespace Paintball
 
         public static void ClearPaintballMaps()
         {
+            // NOTE: This only clears the Paintball maps list
+            // The actual map/level files are NOT deleted from the server
             PaintballMaps.Clear();
             ActiveMap = "";
             SavePaintballMaps();
@@ -274,7 +279,8 @@ namespace Paintball
             {
                 if (args.Length < 2 || args[1] != "--confirm")
                 {
-                    p.Message("&cAre you sure you want to clear all Paintball maps?");
+                    p.Message("&cAre you sure you want to clear all Paintball maps from the list?");
+                    p.Message("&7(This will NOT delete the actual map files)");
                     p.Message("&cUse: &f/pb clear --confirm &cto proceed.");
                     return;
                 }
@@ -282,6 +288,7 @@ namespace Paintball
                 int count = PaintballPlugin.PaintballMaps.Count;
                 PaintballPlugin.ClearPaintballMaps();
                 p.Message("&aCleared all {0} Paintball map(s) from the list.", count);
+                p.Message("&7(Map files were not deleted)");
                 return;
             }
 
