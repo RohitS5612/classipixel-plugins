@@ -219,44 +219,44 @@ namespace Paintball
                 return;
             }
 
-            string mapName2 = args[1];
+            string mapName = args[1];
 
             // Check if map exists
-            if (!LevelInfo.MapExists(mapName2))
+            if (!LevelInfo.MapExists(mapName))
             {
-                p.Message("&cThe map '{0}' does not exist on this server.", mapName2);
+                p.Message("&cThe map '{0}' does not exist on this server.", mapName);
                 return;
             }
 
             // Handle add action
             if (action == "add")
             {
-                if (PaintballPlugin.AddPaintballMap(mapName2))
+                if (PaintballPlugin.AddPaintballMap(mapName))
                 {
-                    p.Message("&aSuccessfully added '{0}' to the Paintball maps list.", mapName2);
+                    p.Message("&aSuccessfully added '{0}' to the Paintball maps list.", mapName);
                     
                     // If this is the first map, set it as active
                     if (PaintballPlugin.PaintballMaps.Count == 1)
                     {
-                        PaintballPlugin.SetActiveMap(mapName2);
+                        PaintballPlugin.SetActiveMap(mapName);
                         p.Message("&aSet '{0}' as the active Paintball map.", PaintballPlugin.ActiveMap);
                     }
                 }
                 else
                 {
-                    p.Message("&cThe map '{0}' is already in the Paintball maps list.", mapName2);
+                    p.Message("&cThe map '{0}' is already in the Paintball maps list.", mapName);
                 }
             }
             // Handle remove actions
             else if (action == "remove" || action == "rem" || action == "delete" || action == "del")
             {
-                if (PaintballPlugin.RemovePaintballMap(mapName2))
+                if (PaintballPlugin.RemovePaintballMap(mapName))
                 {
-                    p.Message("&aSuccessfully removed '{0}' from the Paintball maps list.", mapName2);
+                    p.Message("&aSuccessfully removed '{0}' from the Paintball maps list.", mapName);
                 }
                 else
                 {
-                    p.Message("&cThe map '{0}' is not in the Paintball maps list.", mapName2);
+                    p.Message("&cThe map '{0}' is not in the Paintball maps list.", mapName);
                 }
             }
             else
@@ -280,14 +280,16 @@ namespace Paintball
             if (string.IsNullOrEmpty(PaintballPlugin.ActiveMap))
             {
                 string randomMap = PaintballPlugin.GetRandomMap();
-                if (randomMap != null)
+                if (randomMap == null)
                 {
-                    PaintballPlugin.SetActiveMap(randomMap);
+                    p.Message("&cFailed to select a Paintball map.");
+                    return;
                 }
+                PaintballPlugin.SetActiveMap(randomMap);
             }
 
             // Check if active map still exists
-            if (!LevelInfo.MapExists(PaintballPlugin.ActiveMap))
+            if (string.IsNullOrEmpty(PaintballPlugin.ActiveMap) || !LevelInfo.MapExists(PaintballPlugin.ActiveMap))
             {
                 p.Message("&cThe active Paintball map '{0}' no longer exists.", PaintballPlugin.ActiveMap);
                 p.Message("&cAn admin needs to set a new active map using /pb set <map>");
