@@ -52,7 +52,8 @@ namespace Paintball
 
         public static bool AddPaintballMap(string mapName)
         {
-            if (!PaintballMaps.Contains(mapName))
+            // Use case-insensitive comparison to match MCGalaxy's map handling
+            if (!PaintballMaps.Exists(m => m.CaselessEq(mapName)))
             {
                 PaintballMaps.Add(mapName);
                 SavePaintballMaps();
@@ -63,9 +64,11 @@ namespace Paintball
 
         public static bool RemovePaintballMap(string mapName)
         {
-            if (PaintballMaps.Contains(mapName))
+            // Use case-insensitive comparison to match MCGalaxy's map handling
+            string existing = PaintballMaps.Find(m => m.CaselessEq(mapName));
+            if (existing != null)
             {
-                PaintballMaps.Remove(mapName);
+                PaintballMaps.Remove(existing);
                 SavePaintballMaps();
                 return true;
             }

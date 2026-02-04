@@ -55,5 +55,5 @@ Paintball maps are stored in `text/paintballmaps.txt` in your MCGalaxy directory
 ## Notes
 
 - The plugin automatically checks if the specified map exists before adding or removing it
-- Map names are case-sensitive
+- Map names are case-insensitive (matching MCGalaxy's standard map handling)
 - The list of Paintball maps persists across server restarts
