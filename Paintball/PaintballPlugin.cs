@@ -16,14 +16,20 @@ namespace Paintball
         public override string creator { get { return "Classipixel"; } }
 
         public static List<string> PaintballMaps = new List<string>();
-        public static string ActiveMap = "";
+        public static Dictionary<string, string> Settings = new Dictionary<string, string>();
         private const string PAINTBALL_MAPS_FILE = "plugins/Paintball/maps.conf";
-        private const string PAINTBALL_ACTIVE_FILE = "plugins/Paintball/active.txt";
+        private const string PAINTBALL_CONFIG_FILE = "plugins/Paintball/paintball.conf";
+
+        public static string ActiveMap
+        {
+            get { return Settings.ContainsKey("activemap") ? Settings["activemap"] : ""; }
+            set { Settings["activemap"] = value; }
+        }
 
         public override void Load(bool startup)
         {
             LoadPaintballMaps();
-            LoadActiveMap();
+            LoadSettings();
             Command.Register(new CmdPaintball());
         }
 
@@ -48,14 +54,24 @@ namespace Paintball
             }
         }
 
-        public static void LoadActiveMap()
+        public static void LoadSettings()
         {
-            if (File.Exists(PAINTBALL_ACTIVE_FILE))
+            Settings.Clear();
+            if (File.Exists(PAINTBALL_CONFIG_FILE))
             {
-                string content = File.ReadAllText(PAINTBALL_ACTIVE_FILE).Trim();
-                if (!string.IsNullOrWhiteSpace(content))
+                string[] lines = File.ReadAllLines(PAINTBALL_CONFIG_FILE);
+                foreach (string line in lines)
                 {
-                    ActiveMap = content;
+                    if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
+                        continue;
+
+                    int separatorIndex = line.IndexOf('=');
+                    if (separatorIndex > 0)
+                    {
+                        string key = line.Substring(0, separatorIndex).Trim().ToLower();
+                        string value = line.Substring(separatorIndex + 1).Trim();
+                        Settings[key] = value;
+                    }
                 }
             }
         }
@@ -66,10 +82,20 @@ namespace Paintball
             File.WriteAllLines(PAINTBALL_MAPS_FILE, PaintballMaps.ToArray());
         }
 
-        public static void SaveActiveMap()
+        public static void SaveSettings()
         {
             Directory.CreateDirectory("plugins/Paintball");
-            File.WriteAllText(PAINTBALL_ACTIVE_FILE, ActiveMap);
+            List<string> lines = new List<string>();
+            lines.Add("# Paintball Plugin Configuration");
+            lines.Add("# Format: key=value");
+            lines.Add("");
+            
+            foreach (var kvp in Settings)
+            {
+                lines.Add(string.Format("{0}={1}", kvp.Key, kvp.Value));
+            }
+            
+            File.WriteAllLines(PAINTBALL_CONFIG_FILE, lines.ToArray());
         }
 
         public static bool AddPaintballMap(string mapName)
@@ -97,7 +123,7 @@ namespace Paintball
                 if (ActiveMap.CaselessEq(mapName))
                 {
                     ActiveMap = "";
-                    SaveActiveMap();
+                    SaveSettings();
                 }
                 return true;
             }
@@ -109,7 +135,7 @@ namespace Paintball
             PaintballMaps.Clear();
             ActiveMap = "";
             SavePaintballMaps();
-            SaveActiveMap();
+            SaveSettings();
         }
 
         public static bool SetActiveMap(string mapName)
@@ -119,7 +145,7 @@ namespace Paintball
             if (existing != null)
             {
                 ActiveMap = existing;
-                SaveActiveMap();
+                SaveSettings();
                 return true;
             }
             return false;
@@ -131,6 +157,25 @@ namespace Paintball
             Random rand = new Random();
             int index = rand.Next(PaintballMaps.Count);
             return PaintballMaps[index];
+        }
+
+        public static bool SetSetting(string key, string value)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                return false;
+            
+            Settings[key.ToLower()] = value;
+            SaveSettings();
+            return true;
+        }
+
+        public static string GetSetting(string key, string defaultValue = "")
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                return defaultValue;
+            
+            key = key.ToLower();
+            return Settings.ContainsKey(key) ? Settings[key] : defaultValue;
         }
     }
 

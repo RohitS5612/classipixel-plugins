@@ -73,9 +73,11 @@ Sets which map players will be teleported to when using `/pb`. The map must alre
 ## Storage
 
 - Paintball maps list: `plugins/Paintball/maps.conf`
-- Active map: `plugins/Paintball/active.txt`
+- Settings (including active map): `plugins/Paintball/paintball.conf`
 
 Both files are stored in your MCGalaxy directory (e.g., `/home/rohit/MCGalaxy/plugins/Paintball/`)
+
+The `paintball.conf` file uses a simple `key=value` format and can be edited directly if needed.
 
 ## Requirements
 
