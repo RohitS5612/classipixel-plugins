@@ -108,6 +108,10 @@ namespace MCGalaxy.Games
 
         public override void Load(bool startup)
         {
+            // Create necessary directories
+            Directory.CreateDirectory("plugins/Paintball");
+            Directory.CreateDirectory("plugins/Paintball/maps");
+            
             // Add token into the server
             PaintballToken = new ChatToken("$paintball", "Paintball", TokenPaintball);
             ChatTokens.Standard.Add(PaintballToken);
