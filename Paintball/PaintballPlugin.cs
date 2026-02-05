@@ -559,6 +559,32 @@ namespace MCGalaxy.Games
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage Paintball") }; }
         }
 
+        public override void Use(Player p, string message, CommandData data)
+        {
+            string[] args = message.SplitSpaces();
+            if (args.Length > 0 && args[0].CaselessEq("clear"))
+            {
+                HandleClear(p, args);
+                return;
+            }
+            base.Use(p, message, data);
+        }
+
+        void HandleClear(Player p, string[] args)
+        {
+            if (args.Length < 2 || !args[1].Equals("--confirm"))
+            {
+                p.Message("&cAre you sure you want to clear all Paintball maps from the list?");
+                p.Message("&cUse: &f/pb clear --confirm &cto proceed.");
+                return;
+            }
+
+            int count = Game.GetConfig().Maps.Count;
+            Game.GetConfig().Maps.Clear();
+            Game.GetConfig().Save();
+            p.Message("&aCleared all {0} Paintball map(s) from the list.", count);
+        }
+
         protected override void HandleStart(Player p, RoundsGame game, string[] args)
         {
             if (game.Running) { p.Message("{0} is already running", game.GameName); return; }
@@ -626,6 +652,7 @@ namespace MCGalaxy.Games
             p.Message("&T/pb stop &H- Immediately stops Paintball");
             p.Message("&T/pb end &H- Ends current round of Paintball");
             p.Message("&T/pb add/remove &H- Adds/removes current map from the map list");
+            p.Message("&T/pb clear --confirm &H- Clears all maps from the list");
             p.Message("&T/pb status &H- Outputs current status of Paintball");
             p.Message("&T/pb go &H- Moves you to the current Paintball map.");
         }
