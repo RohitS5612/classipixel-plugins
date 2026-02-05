@@ -54,7 +54,7 @@ namespace MCGalaxy.Games
         public void Save(string map)
         {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(PaintballMapConfig));
-            ConfigElement.Serialise(cfg, Path(map), this);
+            ConfigElement.Save(cfg, Path(map), this);
         }
     }
 
