@@ -54,7 +54,7 @@ namespace MCGalaxy.Games
         public void Save(string map)
         {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(PaintballMapConfig));
-            ConfigElement.SerialiseSimple(cfg, Path(map), this);
+            ConfigElement.Serialise(cfg, Path(map), this);
         }
     }
 
@@ -67,7 +67,7 @@ namespace MCGalaxy.Games
 
     public sealed class PaintballPlugin : Plugin
     {
-        public override string creator { get { return "Classipixel"; } }
+        public override string creator { get { return "RohitS5612"; } }
         public override string MCGalaxy_Version { get { return "1.9.4.9"; } }
         public override string name { get { return "Paintball"; } }
 
@@ -146,7 +146,7 @@ namespace MCGalaxy.Games
         public VolatileArray<Player> Alive = new VolatileArray<Player>();
 
         public static PaintballGame Instance = new PaintballGame();
-        public PaintballGame() { Picker = new LevelPicker(); }
+        public PaintballGame() { }
 
         public PaintballConfig Config = new PaintballConfig();
         public override RoundsGameConfig GetConfig() { return Config; }
@@ -326,7 +326,6 @@ namespace MCGalaxy.Games
         }
 
         // ============================================ ROUND =======================================
-        int roundsOnThisMap = 1;
 
         protected override void DoRound()
         {
