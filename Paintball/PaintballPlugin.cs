@@ -30,10 +30,12 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games
 {
+    // Stores per-map configuration like spawn points
+    // Each map can have its own spawn location saved in plugins/Paintball/maps/<mapname>.config
     public class PaintballMapConfig
     {
         [ConfigVec3("paintball-spawn", null)]
-        public Vec3U16 Spawn;
+        public Vec3U16 Spawn; // Spawn coordinates for players
 
         static string Path(string map) { return "./plugins/Paintball/maps/" + map + ".config"; }
         static ConfigElement[] cfg;
@@ -62,12 +64,16 @@ namespace MCGalaxy.Games
     }
 
 
+    // Stores per-player game data during a round
+    // Tracks tokens earned and kills made
     public sealed class PaintballData
     {
         public int Tokens = 0; // Tokens earned throughout the round
         public int Kills = 0; // Total kills
     }
 
+    // Main plugin class - handles loading, unloading, and initialization
+    // This is the entry point that MCGalaxy calls when loading the plugin
     public sealed class PaintballPlugin : Plugin
     {
         public override string creator { get { return "RohitS5612"; } }
@@ -138,15 +144,19 @@ namespace MCGalaxy.Games
         }
     }
 
+    // Configuration for the rounds game system
+    // Handles game.properties file loading and autostart settings
     public sealed class PaintballConfig : RoundsGameConfig
     {
         public override bool AllowAutoload { get { return true; } }
         protected override string GameName { get { return "Paintball"; } }
     }
 
+    // Main game logic class - handles rounds, player tracking, events
+    // Extends RoundsGame to get automatic round management functionality
     public sealed partial class PaintballGame : RoundsGame
     {
-        public VolatileArray<Player> Alive = new VolatileArray<Player>();
+        public VolatileArray<Player> Alive = new VolatileArray<Player>(); // Thread-safe list of alive players
 
         public static PaintballGame Instance = new PaintballGame();
         public PaintballGame() { }
@@ -164,6 +174,7 @@ namespace MCGalaxy.Games
         }
 
         // =========================================== CONFIG =======================================
+        // Modify these values to change game behavior
 
         public static bool pvp = true; // Whether or not to allow players to fight each other
         public static bool buildable = false; // Whether or not to make the map buildable on round start
@@ -177,6 +188,7 @@ namespace MCGalaxy.Games
         public static int countdownTimer = 30; // Time (in seconds) to check for players before starting a round
 
         // ============================================ GAME =======================================
+        // Core game methods: starting, stopping, player management
         public override void UpdateMapConfig()
         {
             cfg = new PaintballMapConfig();
@@ -224,7 +236,8 @@ namespace MCGalaxy.Games
             return RoundInProgress ? "&b" + Alive.Count + " &Splayers left" : "";
         }
 
-        // ============================================ PLUGIN =======================================		
+        // ============================================ PLUGIN =======================================
+        // Event handlers: chat, spawning, joining levels
         protected override void HookEventHandlers()
         {
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
@@ -329,7 +342,7 @@ namespace MCGalaxy.Games
         }
 
         // ============================================ ROUND =======================================
-
+        // Round logic: countdown, player setup, game loop, winner determination
         protected override void DoRound()
         {
             if (!Running) return;
@@ -530,7 +543,8 @@ namespace MCGalaxy.Games
         // ============================================ STATS =======================================
     }
 
-    // This is the command the player will type. E.g, /paintball or /pb
+    // Command handler for /paintball and /pb
+    // Provides: start, stop, end, add, remove, status, go, set spawn
     public sealed class CmdPaintball : RoundsGameCmd
     {
         public override string name { get { return "Paintball"; } }
