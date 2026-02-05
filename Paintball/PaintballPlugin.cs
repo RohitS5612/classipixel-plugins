@@ -54,7 +54,10 @@ namespace MCGalaxy.Games
         public void Save(string map)
         {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(PaintballMapConfig));
-            PropertiesFile.Write(Path(map), cfg, this);
+            using (StreamWriter w = new StreamWriter(Path(map))) {
+                w.WriteLine("# Paintball map config for " + map);
+                w.WriteLine("paintball-spawn = " + Spawn.X + " " + Spawn.Y + " " + Spawn.Z);
+            }
         }
     }
 
