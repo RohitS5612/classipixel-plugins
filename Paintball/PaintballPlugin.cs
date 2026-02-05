@@ -54,11 +54,7 @@ namespace MCGalaxy.Games
         public void Save(string map)
         {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(PaintballMapConfig));
-            using (StreamWriter w = new StreamWriter(Path(map))) {
-                foreach (ConfigElement elem in cfg) {
-                    elem.SerialiseValue(w, this);
-                }
-            }
+            PropertiesFile.Write(Path(map), cfg, this);
         }
     }
 
