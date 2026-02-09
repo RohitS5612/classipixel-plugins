@@ -1,15 +1,5 @@
 //reference System.Core.dll
 
-/* NOTE:
-    - "Paintball" is the gamemode name - modify if needed
-    - "PB" is the shortcut - modify if needed
-    
-    ^ Easiest way is CTRL + H in most text/code editors.
-    
-    - To add maps, you will need to type /pb add.
-    - This is a template-based plugin, feel free to modify the config section or add your own behaviour.
-*/
-
 using System;
 using System.Collections.Generic;
 using System.IO;
